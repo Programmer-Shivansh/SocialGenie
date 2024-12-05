@@ -1,0 +1,105 @@
+enum UserStatus {
+    INVITED
+    VERIFIED
+}
+
+model User {
+    id                 String              @id @default(uuid())
+    name               String?
+    email              String?             @unique
+    pictureUrl         String?             @default('https://i.imgur.com/ZdJSK3Y.jpeg')
+    tokenInvitation    String?
+
+    status             UserStatus          @default(VERIFIED)
+
+    // this is the role of the user for the application
+    globalRole         String              @default('USER')
+    password           String?             @password @omit
+    createdAt          DateTime            @default(now())
+    updatedAt          DateTime            @updatedAt @default(now())
+
+    socialAccounts     SocialAccount[]     @relation("user")
+    posts              PostData[]          @relation("user")
+    contentPreferences ContentPreference[] @relation("user")
+
+    @@auth()
+    @@allow("all", auth().id == this.id)
+    @@allow('all', auth().globalRole == 'ADMIN')
+
+    //we only allow that user to register if they don't create an admin role
+    @@allow("create", globalRole != 'ADMIN')
+    @@allow("read", true)
+}
+
+model SocialAccount {
+
+    id                 String         @id @default(uuid())
+    platformName       String?
+    accessToken        String?
+    refreshToken       String?
+    defaultPostingTime String?
+    platformUsername   String?
+
+    userId             String?
+    user               User?          @relation(fields: [userId], references: [id], name: "user")
+
+    platformPosts      PlatformPost[] @relation("socialAccount")
+    createdAt          DateTime       @default(now())
+    updatedAt          DateTime       @updatedAt @default(now())
+    @@allow("all", true)
+}
+
+model PostData {
+
+    id                  String         @id @default(uuid())
+    caption             String?
+    imageUrl            String?
+    status              String?
+    scheduledDate       String?
+    aiGenerated         Boolean
+
+    userId              String?
+    user                User?          @relation(fields: [userId], references: [id], name: "user")
+    originalPostId      String?
+    originalPost        PostData?      @relation(fields: [originalPostId], references: [id], name: "originalPost")
+
+    postsAsOriginalPost PostData[]     @relation("originalPost")
+    platformPosts       PlatformPost[] @relation("post")
+    createdAt           DateTime       @default(now())
+    updatedAt           DateTime       @updatedAt @default(now())
+    @@allow("all", true)
+}
+
+model PlatformPost {
+
+    id              String         @id @default(uuid())
+    platformPostId  String?
+    status          String?
+    engagementCount Float
+
+    postId          String?
+    post            PostData?      @relation(fields: [postId], references: [id], name: "post")
+    socialAccountId String?
+    socialAccount   SocialAccount? @relation(fields: [socialAccountId], references: [id], name: "socialAccount")
+
+    createdAt       DateTime       @default(now())
+    updatedAt       DateTime       @updatedAt @default(now())
+    @@allow("all", true)
+}
+
+model ContentPreference {
+
+    id           String   @id @default(uuid())
+    aiImageStyle String?
+    captionTone  String?
+    hashtagCount Float?
+    language     String?
+
+    userId       String?
+    user         User?    @relation(fields: [userId], references: [id], name: "user")
+
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt @default(now())
+    @@allow("all", true)
+}
+
