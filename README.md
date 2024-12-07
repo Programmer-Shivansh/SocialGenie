@@ -4,20 +4,16 @@
     <img src="public/logo.jpg" height="150" alt="Logo" />
   </a>
 </p>
-<h1 align="center" style="margin: 0;">In Marble We Trust</h1>
+<h1 align="center" style="margin: 0;">Social Genie</h1>
 
 <a  style="margin: 0;" target="_blank" href="https://marblism.com">
 <p align="center" style="margin: 0; letter-spacing: 3px;
 text-decoration: none;">
-marblism
+Automate content generation for social media platforms like Twitter, Discord, and Telegram using the power of AI Agent
 </p>
 </a>
 </div>
 <div style="height: 50px; background: linear-gradient(#000000, transparent);"></div>
-
-## Documentation
-
-Learn more in the [official documentation](https://dev.marblism.com).
 
 ## Installation
 
