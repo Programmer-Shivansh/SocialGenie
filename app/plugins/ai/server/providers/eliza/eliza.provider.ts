@@ -1,9 +1,9 @@
+import { IAgentRuntime, ISpeechService, Service } from '@ai16z/eliza/core'
+import { ImageDescriptionService } from '@ai16z/eliza/plugin-node'
+import { synthesize } from '@ai16z/eliza/tts'
 import { ReadStream } from 'fs'
 import { Readable } from 'stream'
 import { z, ZodType } from 'zod'
-import { ImageDescriptionService } from "@ai16z/eliza/plugin-node"
-import { Service, ISpeechService, IAgentRuntime } from "@ai16z/eliza/core"
-import { synthesize } from "@ai16z/eliza/tts"
 
 export type ElizaGenerateTextOptions = {
   prompt: string
@@ -31,10 +31,6 @@ export class ElizaProvider {
   private imageService: ImageDescriptionService
   private speechService: SpeechService
 
-  constructor(runtime: IAgentRuntime) {
-    this.initialize(runtime)
-  }
-
   private initialize(runtime: IAgentRuntime): void {
     try {
       this.runtime = runtime
@@ -52,28 +48,36 @@ export class ElizaProvider {
 
   async generateText(options: ElizaGenerateTextOptions): Promise<string> {
     const { prompt, attachmentUrls, history, context } = options
-    const messages = this.buildMessages({ content: prompt, attachmentUrls, history, context })
-    
+    const messages = this.buildMessages({
+      content: prompt,
+      attachmentUrls,
+      history,
+      context,
+    })
+
     const response = await this.runtime.chat.completions.create({
       messages,
-      model: ElizaModel.DEFAULT
+      model: ElizaModel.DEFAULT,
     })
 
     return response.choices[0].message.content
   }
 
-  async generateJson<SchemaType extends ZodType, JsonType = z.infer<SchemaType>>(
+  async generateJson<
+    SchemaType extends ZodType,
+    JsonType = z.infer<SchemaType>,
+  >(
     instruction: string,
     content: string,
     schema: SchemaType,
-    attachmentUrls?: string[]
+    attachmentUrls?: string[],
   ): Promise<JsonType> {
     const messages = this.buildMessages({ content, attachmentUrls })
-    
+
     const response = await this.runtime.chat.completions.create({
       messages: [{ role: 'system', content: instruction }, ...messages],
       model: ElizaModel.DEFAULT,
-      response_format: { type: 'json_object', schema: schema }
+      response_format: { type: 'json_object', schema: schema },
     })
 
     return JSON.parse(response.choices[0].message.content)
@@ -87,7 +91,7 @@ export class ElizaProvider {
       height: 1024,
       numIterations: 20,
       guidanceScale: 3,
-      seed: -1
+      seed: -1,
     })
 
     return response.images[0].url
@@ -97,9 +101,9 @@ export class ElizaProvider {
     const buffer = await this.streamToBuffer(readStream)
     const response = await this.runtime.audio.transcribe({
       file: buffer,
-      model: ElizaModel.AUDIO_TO_TEXT
+      model: ElizaModel.AUDIO_TO_TEXT,
     })
-    
+
     return response.text
   }
 
@@ -113,12 +117,12 @@ export class ElizaProvider {
 
     const systemMessage = {
       role: 'system',
-      content: context?.trim() || ''
+      content: context?.trim() || '',
     }
 
     const historyMessages = history.map((message, index) => ({
       role: index % 2 === 0 ? 'user' : 'assistant',
-      content: message
+      content: message,
     }))
 
     const userMessage = {
@@ -126,8 +130,8 @@ export class ElizaProvider {
       content: content,
       attachments: attachmentUrls.map(url => ({
         type: 'image',
-        url
-      }))
+        url,
+      })),
     }
 
     return [systemMessage, ...historyMessages, userMessage]
@@ -135,7 +139,7 @@ export class ElizaProvider {
 
   private async streamToBuffer(stream: ReadStream | Readable): Promise<Buffer> {
     const chunks: Buffer[] = []
-    
+
     return new Promise((resolve, reject) => {
       stream.on('data', chunk => chunks.push(Buffer.from(chunk)))
       stream.on('error', reject)
@@ -148,7 +152,7 @@ class SpeechService extends Service implements ISpeechService {
   async generate(runtime: IAgentRuntime, text: string): Promise<Readable> {
     const { audio } = await synthesize(text, {
       engine: ElizaModel.TEXT_TO_AUDIO,
-      voice: "en_US-hfc_female-medium",
+      voice: 'en_US-hfc_female-medium',
     })
 
     return Readable.from(audio)

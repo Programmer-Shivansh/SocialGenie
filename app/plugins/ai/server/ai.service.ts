@@ -1,14 +1,14 @@
 import { ReadStream } from 'fs'
 import { ZodType } from 'zod'
 import {
-  OpenaiGenerateTextOptions,
-  OpenaiProvider,
-} from './providers/openai/openai.provider'
+  ElizaGenerateTextOptions,
+  ElizaProvider,
+} from './providers/eliza/eliza.provider'
 
 class Service {
-  private openai = new OpenaiProvider()
+  private openai = new ElizaProvider()
 
-  async generateText(options: OpenaiGenerateTextOptions): Promise<string> {
+  async generateText(options: ElizaGenerateTextOptions): Promise<string> {
     return this.openai.generateText(options)
   }
 

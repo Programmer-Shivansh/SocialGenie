@@ -71,6 +71,9 @@ importers:
       cookie:
         specifier: ^0.6.0
         version: 0.6.0
+      core:
+        specifier: link:@ai16z/eliza/core
+        version: link:@ai16z/eliza/core
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -146,6 +149,9 @@ importers:
       tsx:
         specifier: ^4.15.6
         version: 4.19.1
+      tts:
+        specifier: link:@ai16z/eliza/tts
+        version: link:@ai16z/eliza/tts
       uuid:
         specifier: ^10.0.0
         version: 10.0.0

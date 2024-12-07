@@ -3,7 +3,7 @@
   "workbench.startupEditor": "none",
   "git.confirmSync": false,
   "gitlens.showWelcomeOnInstall": false,
-  "files.autoSave": "off",
+  "files.autoSave": "afterDelay",
   "remote.autoForwardPorts": false,
   "git.autofetch": true,
   "editor.tabSize": 2,
