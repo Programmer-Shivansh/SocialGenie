@@ -6,7 +6,7 @@
 </p>
 <h1 align="center" style="margin: 0;">Social Genie</h1>
 
-<a  style="margin: 0;" target="_blank" href="https://marblism.com">
+<a  style="margin: 0;" >
 <p align="center" style="margin: 0; letter-spacing: 3px;
 text-decoration: none;">
 Automate content generation for social media platforms like Twitter, Discord, and Telegram using the power of AI Agent
