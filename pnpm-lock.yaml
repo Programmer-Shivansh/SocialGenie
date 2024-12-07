@@ -110,6 +110,9 @@ importers:
       passport-google-oauth20:
         specifier: ^2.0.0
         version: 2.0.0
+      plugin-node:
+        specifier: link:@ai16z/eliza/plugin-node
+        version: link:@ai16z/eliza/plugin-node
       postcss:
         specifier: ^8.4.38
         version: 8.4.47

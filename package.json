@@ -60,6 +60,7 @@
     "papaparse": "^5.4.1",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
+    "plugin-node": "link:@ai16z/eliza/plugin-node",
     "postcss": "^8.4.38",
     "posthog-js": "^1.167.0",
     "prisma": "^5.19.1",
